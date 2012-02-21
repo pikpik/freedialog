@@ -1,10 +1,13 @@
-#include <dialog.h>
+#include <stdio.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "dialog.h"
+
+#define TRUE	1
+#define FALSE	0
 
 int      clear_d = 0;	               /* Should we clear screen? */
 
@@ -48,7 +51,7 @@ main(argc, argv)
 	int    argc;
 	char **argv;
 {
-	char   result[MAX_LEN], *result2;
+	char   result[MAX_INPUT], *result2;
 	char  *i, *j;
 	int    ch, cmd, r;
 	
@@ -96,12 +99,14 @@ breakout:
 	argc -= optind;
 	argv += optind;
 	
-	if (rcfile != NULL) {
+	/* Ndialog doesn't support this yet. */
+
+	/*if (rcfile != NULL) {
 		dialog_create_rc(rcfile);
 		return 0;
-	}
+	}*/
 	
-	use_helpfile(hfile);
+	/* use_helpfile(hfile); */ /* Not in ndialog. */
 	use_helpline(hline_d);
 	
 	switch (cmd) {
@@ -130,7 +135,7 @@ breakout:
 		if (argc != 3 && argc != 4)
 			usage();
 		if (argc == 4)
-			strncpy(result, argv[3], MAX_LEN);
+			strncpy(result, argv[3], MAX_INPUT);
 		r = dialog_inputbox(title,(unsigned char *) argv[0],
 				    strtol(argv[1], (char **)NULL, 10), 
 				    strtol(argv[2], (char **)NULL, 10), 
@@ -139,9 +144,11 @@ breakout:
 	case TEXTBOX_OPT:
 		if (argc != 3)
 			usage();
+		/*
 		r = dialog_textbox(title, (unsigned char *)argv[0], 
 				   strtol(argv[1], (char **)NULL, 10), 
 				   strtol(argv[2], (char **)NULL, 10));
+		*/	/* Not in ndialog. */
 		break;
 	case MENU_OPT:
 		if ((argc % 2) != 0 || argc < 6)
@@ -155,10 +162,12 @@ breakout:
 	case PRGBOX_OPT:
 		if (argc != 3)
 			usage();
+		/*
 		r = dialog_prgbox(title, (unsigned char *)argv[0],
 				  strtol(argv[1], (char **)NULL, 10),
 				  strtol(argv[2], (char **)NULL, 10),
 				  TRUE, TRUE);
+		*/	/* Not in ndialog. */
 		break;
 	case CHECKLIST_OPT:
 		if ((argc % 3) != 1 || argc < 7)
@@ -183,16 +192,19 @@ breakout:
 	case FTREE_OPT:
 		if (argc < 6)
 			usage();
+		/*
 		r = dialog_ftree((unsigned char *)argv[0], *argv[1], 
 				 title, (unsigned char *) argv[2],
 				 strtol(argv[3], (char **)NULL, 10),
 				 strtol(argv[4], (char **)NULL, 10),
 				 strtol(argv[5], (char **)NULL, 10),
 				 (unsigned char **)&result2);
+		*/	/* Not in ndialog. */
 		break;
 	case TREE_OPT:
 		if (argc < 6)
 			usage();
+		/*
 		r = dialog_tree((unsigned char **)&argv[5], argc - 5, 
 				*argv[0], title, 
 				(unsigned char *)argv[1],
@@ -200,6 +212,7 @@ breakout:
 				strtol(argv[3], (char **)NULL, 10),
 				strtol(argv[4], (char **)NULL, 10),
 				(unsigned char **)&result2);
+		*/	/* Not in ndialog. */
 		break;
 	default:
 		usage();
