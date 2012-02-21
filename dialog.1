@@ -1,0 +1,291 @@
+.Dd July 31, 1999
+.Dt DIALOG 1
+.Os FreeBSD
+.Sh NAME
+.Nm dialog
+.Nd display simple dialog boxes from shell scripts
+.Sh SYNOPSIS
+.Nm dialog
+.Fl -clear
+.Nm dialog
+.Op Fl -clear
+.Op Fl -hfile Ar file
+.Op Fl -hline Ar line
+.Op Fl -title Ar title
+.Fl -[dialog] Ar options ...
+.Nm dialog
+.Fl -create-rc
+.Sh DESCRIPTION
+The 
+.Nm dialog
+utility will display several different types of 
+.Xr curses 3
+based dialog boxes on the screen and accept
+the appropriate form of user input.  Ten different 
+types of dialog boxes are supported:  checklist, 
+info, input, menu, message, program output, radiolist, 
+text, yes/no, and two different tree types.
+.Sh OPTIONS
+.Bl -tag -width Fl
+.It Fl -checklist Ar "text height width list-height tag item status ..."
+.Pp
+Display a check list of overall height 
+.Ar height
+and width 
+.Ar width .
+The height of the list proper is specified by
+.Ar list-height .
+Each item on the list is specified by a tuple of options. 
+The first is the 
+.Ar tag .
+This is highlighted and will have a keyboard shortcut 
+assigned based on it.  The second is the 
+.Ar item .
+The
+.Ar item
+is a full description of the choice.  The third is its
+initial
+.Ar status .
+This is either ``on'' or ``off''.  If the user selects
+``cancel'', 
+.Nm dialog 
+exits with 1.  Otherwise
+.Nm dialog
+exits with 0 and prints the 
+.Ar tag
+of all selected items in double quotes, seperated
+by spaces (`` ''), followed by a new line to the
+.Ar stderr .
+.It Fl -ftree Ar "file FS text height width menu-height"
+.Pp
+Display a file-system tree of height
+.Ar height 
+and width
+.Ar width .
+The height of the tree proper is set via the
+.Ar menu-height 
+option.
+The contents of the tree are set via
+.Ar file .
+This is a plain-text file with output similar to the
+.Xr find 1
+system utility.  The value of 
+.Ar FS
+is the directory field seperator.  The user may navigate
+through the tree using UP, DOWN, PGUP, PGDOWN, SPACE, HOME,
+END, ``+'', ``-'', b, g, and G.  If cancel is selected, 
+.Nm dialog
+exits with status 1.  Otherwise, the selected file or 
+directory is printed to the
+.Ar stderr
+and
+.Nm dialog
+exits with status 0.
+
+.It Fl -infobox Ar "text height width"
+.Pp
+Display a simple information dialog of height 
+.Ar height
+and width 
+.Ar width .
+The content of the information dialog is 
+.Ar text .
+.Nm Dialog
+exists without waiting for user input after displaying
+the dialog box.
+.It Fl -inputbox Ar "prompt height width" Op default
+.Pp
+Display a box requesting user input.  The inputbox will
+be of height
+.Ar height
+and width
+.Ar width .
+The user is prompted with the text 
+.Ar prompt .
+A default value for the input can be set by 
+.Ar default .
+After the user has entered a value, it will be 
+printed on the
+.Ar stderr
+and
+.Nm dialog
+exits with 0.  If the user selects ``cancel'',
+.Nm dialog
+exits with 1.
+.It Fl -menu Ar "text height width menu-height tag item ..."
+.Pp
+Display a menu dialog of height 
+.Ar height
+and width
+.Ar width .
+The height of the menu proper will be 
+.Ar menu-height 
+lines tall.  Each item on the menu is given by a pair of 
+command line options.  The first is the
+.Ar tag .
+The 
+.Ar tag
+is highlighted and will have a shortcut based on it.  The 
+second is the
+.Ar item .
+It is a full description of the choice.  If the user 
+selects ``cancel'', 
+.Nm dialog
+exists with 1.
+Otherwise, the 
+.Ar tag
+of the users choice is printed to the
+.Ar stderr 
+and 
+.Nm dialog
+exists with 0.
+.It Fl -msgbox Ar "text height width"
+.Pp
+Display a message box of height
+.Ar height
+and width
+.Ar width .
+The message displayed is the
+.Ar text
+argument.  
+.Nm Dialog
+waits for the user to select the ``ok'' button at the
+bottom of the window before exiting.
+.It Fl -prgbox Ar "command height width"
+.Pp
+.Nm Dialog
+passes
+.Ar command
+to
+.Xr sh 1
+via 
+.Xr system 3 .
+The output of 
+.Ar command
+is then displayed in a dialog box of height 
+.Ar height
+and width
+.Ar width .
+.Nm Dialog
+will wait for the user to select the ``ok'' button 
+before exiting.
+.It Fl -radiolist Ar "text height width list-height tag item status ..."
+.Pp
+Display a radiobutton list of overall height 
+.Ar height
+and width 
+.Ar width .
+The height of the list proper is specified by
+.Ar list-height .
+Each item on the list is specified by a tuple of options. 
+The first is the 
+.Ar tag .
+This is highlighted and will have a keyboard shortcut 
+assigned based on it.  The second is the 
+.Ar item .
+The
+.Ar item
+is a full description of the choice.  The third is its
+initial
+.Ar status .
+This is either ``on'' or ``off''.  If the user selects
+``cancel'', 
+.Nm dialog 
+exits with 1.  Otherwise
+.Nm dialog
+exits with 0 and prints the 
+.Ar tag
+of the selected item to the
+.Ar stderr .
+.It Fl -textbox Ar "file height width"
+.Pp
+Display a scrolling text box of height 
+.Ar height
+and width
+.Ar width .
+The contents of the text box are the contents of the
+file listed as
+.Ar file .
+The user may scroll through the file using the UP,
+DOWN, PGUP, PGDOWN, HOME, and END keys.  If any lines
+of the file are wider than the 
+.Ar width ,
+the LEFT and RIGHT arrow keys permit horizontal scrolling.
+.Nm Dialog
+exits when the ``ok'' button has been selected.
+.It Fl -tree Ar "FS text height width menu-height item ..."
+.Pp
+.Nm Dialog
+displays a dialog box similar to the 
+.Fl -ftree
+dialog box.  However, instead of fetching the
+contents from a file, multiple items are listed
+on the command line and make up the tree.
+.It Fl -yesno Ar "text height width"
+.Pp
+Display a yes/no dialog box of height
+.Ar height
+and width 
+.ar width .
+The prompt for the yes/no dialog is set
+via the
+.Ar text
+argument.  If ``yes'' is selected, 
+.Nm dialog
+exits with status 0.  If ``no'' is selected,
+.Nm dialog 
+exits with status 1.  
+.It Fl -clear
+.Pp
+Clear the screen to the background color immediately.  Clear is processed after all other options.
+.It Fl -hfile Ar file
+.Pp
+For dialogs using context sensitive help, when the F1
+key is pressed, 
+.Ar file
+is displayed in a textbox.
+.It Fl -hline Ar line
+.Pp
+Display 
+.Ar line
+at the bottom of the dialog box.  This is meant to be
+one line of help.
+.It Fl -title Ar title
+.Pp
+Sets the dialog box's title to
+.Ar title .
+.It Fl -create-rc Ar file
+.Pp
+Dump dialog library settings to 
+.Ar file .
+This file can later be used for dialog defaults.
+.Sh ENVIRONMENT
+.Ev DIALOGRC
+Set the location of the dialog configuration file.
+.Sh FILES
+.Bl -tag -width ~/.dialogrc -compact
+.It Pa ~/.dialogrc
+default configuration file
+.Sh SEE ALSO
+.Xr dialog 3
+.Sh AUTHORS
+Savio Lam.  Changes by Anatoly A. Orehovsky (ftree and
+tree boxes).  Code rewrite and clean up by James Howard.
+.Sh BUGS
+Screen updates are too slow.
+.Pp
+Embedded tabs in the files passed to textbox may not
+be displayed correctly or have other adverse effects.
+.Pp
+The ftree and tree dialog boxes do not allow the
+tree to be scrolled horizontally if it is too wide
+to fit the given window.
+.Pp
+Whatever else libdialog is kind enough to let us 
+inherit.
+.Pp
+.Nm Dialog
+has a really dumb command line syntax.
+.Pp
+There is no documentation for 
+.Ar dialogrc .
